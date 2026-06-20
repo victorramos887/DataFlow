@@ -13,6 +13,7 @@ from .core.config import Settings
 settings = Settings()
 OTEL_EXPORTER_OTLP_ENDPOINT = settings.otel_exporter_otlp_endpoint
 
+
 def setup_telemetry() -> None:
     resource = Resource.create(
         {
@@ -21,13 +22,14 @@ def setup_telemetry() -> None:
             "service.instance.id": str(uuid.uuid4()),
         }
     )
-    
+
     provider = TracerProvider(resource=resource)
-    
+
     exporter = OTLPSpanExporter(endpoint=OTEL_EXPORTER_OTLP_ENDPOINT, insecure=True)
     provider.add_span_processor(BatchSpanProcessor(exporter))
     trace.set_tracer_provider(provider)
-    
+
+
 setup_telemetry()
 
 app = FastAPI(
@@ -38,13 +40,15 @@ app = FastAPI(
 
 FastAPIInstrumentor.instrument_app(app)
 
+
 @app.get("/health")
 def health_check() -> dict[str, str]:
     return {"status": "ok"}
 
+
 @app.get("/ping")
 def ping():
     tracer = trace.get_tracer(__name__)
-    
+
     with tracer.start_as_current_span("ping-endpoint"):
         return {"message": "pong"}
