@@ -1,0 +1,27 @@
+services:
+  data_flow_api:
+    build:
+      context: ../api_fastapi
+      dockerfile: Dockerfile
+    container_name: dataflow-api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ../api_fastapi:/app
+    environment:
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
+      - OTEL_SERVICE_NAME=dataflow-api
+
+    depends_on:
+      - dataflow_otel_lgtm
+
+  dataflow_otel_lgtm:
+    image: grafana/otel-lgtm:latest
+    container_name: dataflow-otel-lgtm
+    ports:
+      - 3000:3000
+      - 4317:4317
+      - 4318:4318
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
