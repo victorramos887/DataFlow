@@ -13,10 +13,10 @@ class UserResponse(BaseModel):
     id: int
     name: str
     email: EmailStr
+    is_active: bool
 
     model_config = ConfigDict(from_attributes=True)
     
-class AuthResponse(BaseModel):
-    user: UserResponse
+class TokenResponse(BaseModel):
     access_token: str
     token_type: str = "bearer"

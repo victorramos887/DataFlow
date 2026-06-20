@@ -10,6 +10,8 @@ from opentelemetry.sdk.trace.export import BatchSpanProcessor
 
 from .core.config import Settings
 
+from app.features.auth.controller import router as auth_router
+
 settings = Settings()
 OTEL_EXPORTER_OTLP_ENDPOINT = settings.otel_exporter_otlp_endpoint
 
@@ -39,6 +41,8 @@ app = FastAPI(
 )
 
 FastAPIInstrumentor.instrument_app(app)
+
+app.include_router(auth_router)
 
 
 @app.get("/health")

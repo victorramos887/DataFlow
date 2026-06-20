@@ -3,6 +3,9 @@ import os
 import pytest
 from fastapi.testclient import TestClient
 
+os.environ.setdefault("POSTGRES_USER", "test")
+os.environ.setdefault("POSTGRES_PASSWORD", "test")
+os.environ.setdefault("POSTGRES_DB", "test")
 
 @pytest.fixture
 def client() -> TestClient:
