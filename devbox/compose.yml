@@ -1,5 +1,5 @@
 services:
-  data_flow_api:
+  dataflow_api:
     build:
       context: ../api_fastapi
       dockerfile: Dockerfile
@@ -8,12 +8,31 @@ services:
       - "8000:8000"
     volumes:
       - ../api_fastapi:/app
-    environment:
-      - OTEL_EXPORTER_OTLP_ENDPOINT=http://dataflow_otel_lgtm:4317
-      - OTEL_SERVICE_NAME=dataflow-api
-
+    env_file:
+      - ../api_fastapi/.env
     depends_on:
       - dataflow_otel_lgtm
+      - dataflow_postgres
+    networks:
+      - dataflow_network
+
+  dataflow_postgres:
+    image: postgres:17
+    container_name: dataflow-postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-dataflow_db}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-autoatendimento}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    ports:
+      - "5432:5432"
     networks:
       - dataflow_network
 
@@ -33,3 +52,6 @@ services:
 networks:
   dataflow_network:
     driver: bridge
+
+volumes:
+  postgres_data:

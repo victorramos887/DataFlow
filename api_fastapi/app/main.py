@@ -7,16 +7,19 @@ from opentelemetry.sdk.resources import Resource
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
 
+from .core.config import Settings
+
 import os
 import uuid
 
-OTEL_EXPORTER_OTLP_ENDPOINT = os.getenv("OTEL_EXPORTER_OTLP_ENDPOINT", "http://localhost:4317")
+settings = Settings()
+OTEL_EXPORTER_OTLP_ENDPOINT = settings.otel_exporter_otlp_endpoint
 
 def setup_telemetry() -> None:
     resource = Resource.create(
         {
-            "service.name": "fastapi-service",
-            "service.version": "1.0.0",
+            "service.name": settings.app_name,
+            "service.version": settings.app_version,
             "service.instance.id": str(uuid.uuid4()),
         }
     )
@@ -30,9 +33,9 @@ def setup_telemetry() -> None:
 setup_telemetry()
 
 app = FastAPI(
-    title="FastAPI with OpenTelemetry",
+    title=settings.app_name,
     description="A simple FastAPI application instrumented with OpenTelemetry for tracing.",
-    version="1.0.0",
+    version=settings.app_version,
 )
 
 FastAPIInstrumentor.instrument_app(app)
