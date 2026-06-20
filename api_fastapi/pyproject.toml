@@ -14,3 +14,54 @@ dependencies = [
     "pydantic-settings>=2.14.2",
     "uvicorn>=0.49.0",
 ]
+
+[dependency-groups]
+dev = [
+    "httpx>=0.28.1",
+    "pytest>=9.1.1",
+    "pytest-cov>=7.1.0",
+    "ruff>=0.15.18",
+]
+
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_functions = ["test_*"]
+addopts = "-ra --strict-markers --strict-config"
+pythonpath = ["."]
+
+[tool.ruff]
+target-version = "py314"
+line-length = 100
+src = ["app", "tests"]
+extend-exclude = [
+    "__pycache__",
+    ".venv",
+    "venv",
+    ".mypy_cache",
+    ".pytest_cache",
+    ".ruff_cache",
+]
+
+[tool.ruff.lint]
+select = [
+    "E",     # pycodestyle errors
+    "F",     # pyflakes
+    "I",     # import sorting
+    "B",     # bugbear
+    "UP",    # pyupgrade
+    "SIM",   # simplificações
+    "C4",    # comprehensions
+    "RUF",   # regras próprias do Ruff
+]
+ignore = []
+
+[tool.ruff.lint.per-file-ignores]
+"app/features/*/controller/*.py" = ["B008"]
+"app/main.py" = ["B008"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "auto"

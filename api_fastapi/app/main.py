@@ -1,16 +1,14 @@
+import uuid
+
 from fastapi import FastAPI
 from opentelemetry import trace
-from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
-from opentelemetry.instrumentation.asyncio import AsyncioInstrumentor
-from opentelemetry.sdk.trace import TracerProvider
-from opentelemetry.sdk.resources import Resource
-from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
+from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
+from opentelemetry.sdk.resources import Resource
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import BatchSpanProcessor
 
 from .core.config import Settings
-
-import os
-import uuid
 
 settings = Settings()
 OTEL_EXPORTER_OTLP_ENDPOINT = settings.otel_exporter_otlp_endpoint
@@ -41,8 +39,8 @@ app = FastAPI(
 FastAPIInstrumentor.instrument_app(app)
 
 @app.get("/health")
-def health_check():
-    return {"status": "healthy"}
+def health_check() -> dict[str, str]:
+    return {"status": "ok"}
 
 @app.get("/ping")
 def ping():
