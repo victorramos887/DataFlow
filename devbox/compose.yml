@@ -9,11 +9,13 @@ services:
     volumes:
       - ../api_fastapi:/app
     environment:
-      - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://dataflow_otel_lgtm:4317
       - OTEL_SERVICE_NAME=dataflow-api
 
     depends_on:
       - dataflow_otel_lgtm
+    networks:
+      - dataflow_network
 
   dataflow_otel_lgtm:
     image: grafana/otel-lgtm:latest
@@ -25,3 +27,9 @@ services:
     environment:
       GF_SECURITY_ADMIN_USER: admin
       GF_SECURITY_ADMIN_PASSWORD: admin
+    networks:
+      - dataflow_network
+
+networks:
+  dataflow_network:
+    driver: bridge
