@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, status
 from app.features.auth.schemas.auth_permission_schema import PermissionRequest
-from app.features.auth.dependencies import PermissionServiceDep
+from app.features.auth.dependencies.permission_dependencies import PermissionServiceDep
 
 router = APIRouter()
 

@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, status
-from app.features.auth.dependencies import get_auth_service
+from app.features.auth.dependencies.auth_dependencies import get_auth_service
 from app.features.auth.schemas.auth_schema import (
     LoginRequest, 
     RegisterRequest,
@@ -7,7 +7,7 @@ from app.features.auth.schemas.auth_schema import (
     UserResponse,
 )
 
-from app.features.auth.dependencies import AuthServiceDep
+from app.features.auth.dependencies.auth_dependencies import AuthServiceDep
 
 router = APIRouter()
 
