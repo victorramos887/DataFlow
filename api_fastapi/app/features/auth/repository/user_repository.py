@@ -1,5 +1,3 @@
-# app/features/auth/repositories/user_repository.py
-
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 

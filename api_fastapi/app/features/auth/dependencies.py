@@ -7,11 +7,15 @@ from app.features.auth.security.password_hasher import PasswordHasher
 
 from app.features.auth.repository.user_repository import UserRepository
 from app.features.auth.service.auth_permission_service import PermissionService
+from app.features.auth.repository.permission_repository import PermissionRepository
 
 async def get_user_repository(
     session: Annotated[AsyncSession, Depends(get_async_session)]) -> UserRepository:
     return UserRepository(session=session)
 
+async def get_permission_repository(
+    session: Annotated[AsyncSession, Depends(get_async_session)]) -> PermissionRepository:
+    return PermissionRepository(session=session)
 
 def get_password_hasher() -> PasswordHasher:
     return PasswordHasher()
@@ -23,12 +27,27 @@ def get_auth_service(
     from app.features.auth.service.auth_service import AuthService
     return AuthService(user_repository=user_repository, password_hasher=password_hasher)
 
+SessionDep = Annotated[AsyncSession, Depends(get_async_session)]
+
+def get_permission_repository(
+    session: SessionDep,
+) -> PermissionRepository:
+    return PermissionRepository(session=session)
+
+
+PermissionRepositoryDep = Annotated[
+    PermissionRepository,
+    Depends(get_permission_repository),
+]
+
+
+def get_permission_service(
+    permission_repository: PermissionRepositoryDep,
+) -> PermissionService:
+    return PermissionService(permission_repository=permission_repository)
+
 
 PermissionServiceDep = Annotated[
     PermissionService,
-    Depends(lambda: get_permission_service()),
+    Depends(get_permission_service),
 ]
-
-def get_permission_service() -> None:
-    
-    return PermissionService()
