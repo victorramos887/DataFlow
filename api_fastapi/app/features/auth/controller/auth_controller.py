@@ -7,7 +7,7 @@ from app.features.auth.schemas.auth_schema import (
     UserResponse,
 )
 
-from app.features.auth.service.auth_service import AuthService
+from app.features.auth.dependencies import AuthServiceDep
 
 router = APIRouter()
 
@@ -18,7 +18,7 @@ router = APIRouter()
 )
 async def register(
     payload: RegisterRequest,
-    service: AuthService = Depends(get_auth_service)
+    service: AuthServiceDep
 ) -> UserResponse:
     return await service.register(payload)
 
@@ -29,7 +29,7 @@ async def register(
 )
 async def login(
     payload: LoginRequest,
-    service: AuthService = Depends(get_auth_service)
+    service: AuthServiceDep
 ) -> TokenResponse:
     return await service.login(payload)
 
