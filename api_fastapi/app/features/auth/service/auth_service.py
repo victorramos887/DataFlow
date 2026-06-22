@@ -16,13 +16,13 @@ class AuthService:
         
         
     async def register(self, payload: RegisterRequest) -> UserResponse:
-        existing_user = self.user_repository.get_by_email(payload.email)
+        existing_user = await self.user_repository.get_by_email(payload.email)
         
         
         if existing_user:
             raise EmailAlreadyExistsError("Email já registrado")
 
-        password_hash = self.password_hasher.hash(payload.password)
+        password_hash = self.password_hasher.hash_password(payload.password)
         
         user = User(
             id=None,
@@ -30,7 +30,7 @@ class AuthService:
             email=payload.email,
             password_hash=password_hash,
         )
-        created_user = self.user_repository.create(user)
+        created_user = await self.user_repository.create(user)
 
         return UserResponse(
             id=created_user.id,

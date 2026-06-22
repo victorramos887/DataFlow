@@ -1,8 +1,11 @@
 from pwdlib import PasswordHash
+from pwdlib.hashers.argon2 import Argon2Hasher
 
 class PasswordHasher:
     def __init__(self):
-        self.pwd_context = PasswordHash()
+        self.pwd_context = PasswordHash(
+            hashers=[Argon2Hasher()],
+        )
 
     def hash_password(self, password: str) -> str:
         return self.pwd_context.hash(password)
