@@ -40,3 +40,16 @@ class PermissionRepository:
             name=permission_model.name,
             description=permission_model.description,
         )
+        
+    async def list_permissions(self) -> list[Permission]:
+        result = await self.session.execute(select(PermissionModel))
+        permission_models = result.scalars().all()
+
+        return [
+            Permission(
+                id=permission_model.id,
+                name=permission_model.name,
+                description=permission_model.description,
+            )
+            for permission_model in permission_models
+        ]

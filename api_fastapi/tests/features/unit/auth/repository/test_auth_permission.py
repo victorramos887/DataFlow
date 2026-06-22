@@ -45,3 +45,26 @@ class TestAuthPermissionRepository:
         assert result.id == 1
         assert result.name == "manage_users"
         assert result.description == "Can manage users"
+        
+    @pytest.mark.anyio
+    async def test_list_permissions(self):
+        session = AsyncMock()
+
+        permission_models = [
+            PermissionModel(id=1, name="manage_users", description="Can manage users"),
+            PermissionModel(id=2, name="view_reports", description="Can view reports"),
+        ]
+
+        mock_result = MagicMock()
+        mock_result.scalars.return_value.all.return_value = permission_models
+        session.execute = AsyncMock(return_value=mock_result)
+
+        repository = PermissionRepository(session)
+
+        result = await repository.list_permissions()
+
+        session.execute.assert_awaited_once()
+        assert result == [
+            Permission(id=1, name="manage_users", description="Can manage users"),
+            Permission(id=2, name="view_reports", description="Can view reports"),
+        ]

@@ -24,3 +24,14 @@ class PermissionService:
             name=created_permission.name,
             description=created_permission.description,
         )
+    
+    async def list_permissions(self):
+        permissions = await self.permission_repository.list_permissions()
+        return [
+            PermissionResponse(
+                id=permission.id,
+                name=permission.name,
+                description=permission.description,
+            )
+            for permission in permissions
+        ]

@@ -22,3 +22,18 @@ class TestAuthPermission:
         assert result == {"message": "Permission created successfully"}
         service.create_permission.assert_awaited_once_with(payload)
     
+
+    @pytest.mark.anyio
+    async def test_list_permissions(self) -> None:
+        service = AsyncMock()
+        service.list_permission.return_value = [
+            {"id": 1, "name": "manage_users", "description": "Can manage users"},
+            {"id": 2, "name": "view_reports", "description": "Can view reports"},
+        ]
+        
+        result = await service.list_permission()
+        assert result == [
+            {"id": 1, "name": "manage_users", "description": "Can manage users"},
+            {"id": 2, "name": "view_reports", "description": "Can view reports"},
+        ]
+        service.list_permission.assert_awaited_once()

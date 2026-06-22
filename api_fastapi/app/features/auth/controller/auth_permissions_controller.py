@@ -13,3 +13,13 @@ async def post_permission(
     service: PermissionServiceDep
 ):
     return await service.create_permission(payload)
+
+@router.get(
+    "/permissions",
+    status_code=status.HTTP_200_OK,
+    response_model=list[PermissionRequest]
+)
+async def list_permissions(
+    service: PermissionServiceDep
+):
+    return await service.list_permissions()
