@@ -13,7 +13,7 @@ from app.features.auth.schemas.auth_schema import (
 
 
 class FakeAuthService:
-    def register(self, payload: RegisterRequest) -> UserResponse:
+    async def register(self, payload: RegisterRequest) -> UserResponse:
         return UserResponse(
             id=1,
             name=payload.name,
@@ -21,7 +21,7 @@ class FakeAuthService:
             is_active=True,
         )
 
-    def login(self, payload: LoginRequest) -> TokenResponse:
+    async def login(self, payload: LoginRequest) -> TokenResponse:
         if payload.email != "victor@email.com" or payload.password != "12345678":
             raise HTTPException(status_code=401, detail="Credenciais inválidas")
 
@@ -30,7 +30,7 @@ class FakeAuthService:
 
 @pytest.fixture
 def auth_client() -> Generator[TestClient]:
-    from app.features.auth.dependencies import get_auth_service
+    from app.core.dependencies import get_auth_service
     from app.main import app
 
     app.dependency_overrides[get_auth_service] = lambda: FakeAuthService()

@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, status
-from app.features.auth.dependencies import get_auth_service
+from app.core.dependencies import get_auth_service
 from app.features.auth.schemas.auth_schema import (
     LoginRequest, 
     RegisterRequest,
@@ -16,19 +16,19 @@ router = APIRouter()
     response_model=UserResponse,
     status_code=status.HTTP_201_CREATED
 )
-def register(
+async def register(
     payload: RegisterRequest,
     service: AuthService = Depends(get_auth_service)
 ) -> UserResponse:
-    return service.register(payload)
+    return await service.register(payload)
 
 @router.post(
     "/login",
     response_model=TokenResponse,
     status_code=status.HTTP_200_OK
 )
-def login(
+async def login(
     payload: LoginRequest,
     service: AuthService = Depends(get_auth_service)
 ) -> TokenResponse:
-    return service.login(payload)
+    return await service.login(payload)
