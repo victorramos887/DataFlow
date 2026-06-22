@@ -32,3 +32,5 @@ async def login(
     service: AuthService = Depends(get_auth_service)
 ) -> TokenResponse:
     return await service.login(payload)
+
+
