@@ -15,8 +15,6 @@ class AuthService:
         self.password_hasher = password_hasher
         
         
-        
-        
     async def register(self, payload: RegisterRequest) -> UserResponse:
         existing_user = self.user_repository.get_by_email(payload.email)
         

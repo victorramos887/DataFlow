@@ -30,7 +30,7 @@ class FakeAuthService:
 
 @pytest.fixture
 def auth_client() -> Generator[TestClient]:
-    from app.core.dependencies import get_auth_service
+    from app.features.auth.dependencies import get_auth_service
     from app.main import app
 
     app.dependency_overrides[get_auth_service] = lambda: FakeAuthService()

@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, status
-from app.core.dependencies import get_auth_service
+from app.features.auth.dependencies import get_auth_service
 from app.features.auth.schemas.auth_schema import (
     LoginRequest, 
     RegisterRequest,
