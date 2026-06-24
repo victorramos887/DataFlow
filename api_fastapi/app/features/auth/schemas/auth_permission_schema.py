@@ -9,3 +9,4 @@ class PermissionResponse(BaseModel):
     id: int
     name: str
     description: str | None
+    roles: list | None = []

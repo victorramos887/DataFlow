@@ -4,6 +4,7 @@ class RegisterRequest(BaseModel):
     name: str = Field(min_length=1, max_length=255)
     email: EmailStr
     password: str = Field(min_length=8, max_length=128)
+    roles: list | None = None
 
 class LoginRequest(BaseModel):
     email: EmailStr
@@ -14,7 +15,7 @@ class UserResponse(BaseModel):
     name: str
     email: EmailStr
     is_active: bool
-
+    roles: list | None = []
     model_config = ConfigDict(from_attributes=True)
     
 class TokenResponse(BaseModel):

@@ -10,3 +10,5 @@ class RolesResponse(BaseModel):
     id: int
     name: str
     description: str | None
+    users: list | None = []
+    permission: list | None = []

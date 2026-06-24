@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from app.features.auth.controller import auth_controller
+from app.features.auth.controller import auth_users_controller
 from app.features.auth.controller import auth_permissions_controller
 from app.features.auth.controller import auth_roles_controller
 
@@ -9,6 +9,6 @@ router = APIRouter(
     tags=["auth"]
 )
 
-router.include_router(auth_controller.router)
+router.include_router(auth_users_controller.router)
 router.include_router(auth_permissions_controller.router)
 router.include_router(auth_roles_controller.router)
