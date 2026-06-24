@@ -68,3 +68,67 @@ class TestAuthPermissionRepository:
             Permission(id=1, name="manage_users", description="Can manage users"),
             Permission(id=2, name="view_reports", description="Can view reports"),
         ]
+    
+    @pytest.mark.anyio
+    async def test_get_by_name_permission_exists(self):
+        session = AsyncMock()
+
+        permission_model = PermissionModel(id=1, name="manage_users", description="Can manage users")
+
+        mock_result = MagicMock()
+        mock_result.scalars.return_value.first.return_value = permission_model
+        session.execute = AsyncMock(return_value=mock_result)
+
+        repository = PermissionRepository(session)
+
+        result = await repository.get_by_name("manage_users")
+
+        session.execute.assert_awaited_once()
+        assert result == Permission(id=1, name="manage_users", description="Can manage users")
+    
+    @pytest.mark.anyio
+    async def test_get_by_name_permission_not_exists(self):
+        session = AsyncMock()
+
+        mock_result = MagicMock()
+        mock_result.scalars.return_value.first.return_value = None
+        session.execute = AsyncMock(return_value=mock_result)
+
+        repository = PermissionRepository(session)
+
+        result = await repository.get_by_name("non_existing_permission")
+
+        session.execute.assert_awaited_once()
+        assert result is None
+    
+    @pytest.mark.anyio
+    async def test_get_by_id_permission_exists(self):
+        session = AsyncMock()
+
+        permission_model = PermissionModel(id=1, name="manage_users", description="Can manage users")
+
+        mock_result = MagicMock()
+        mock_result.scalars.return_value.first.return_value = permission_model
+        session.execute = AsyncMock(return_value=mock_result)
+
+        repository = PermissionRepository(session)
+
+        result = await repository.get_by_id(1)
+
+        session.execute.assert_awaited_once()
+        assert result == Permission(id=1, name="manage_users", description="Can manage users")
+    
+    @pytest.mark.anyio
+    async def test_get_by_id_permission_not_exists(self):
+        session = AsyncMock()
+
+        mock_result = MagicMock()
+        mock_result.scalars.return_value.first.return_value = None
+        session.execute = AsyncMock(return_value=mock_result)
+
+        repository = PermissionRepository(session)
+
+        result = await repository.get_by_id(999)
+
+        session.execute.assert_awaited_once()
+        assert result is None

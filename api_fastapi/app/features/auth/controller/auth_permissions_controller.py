@@ -23,3 +23,13 @@ async def list_permissions(
     service: PermissionServiceDep
 ):
     return await service.list_permissions()
+
+@router.get(
+    "/permissions/{permission_id}",
+    status_code=status.HTTP_200_OK,
+)
+async def get_permission(
+    permission_id: int,
+    service: PermissionServiceDep
+):
+    return await service.get_permission(permission_id)

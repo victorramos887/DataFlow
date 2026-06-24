@@ -53,3 +53,18 @@ class PermissionRepository:
             )
             for permission_model in permission_models
         ]
+    
+    async def get_by_id(self, permission_id: int) -> Permission | None:
+        result = await self.session.execute(
+            select(PermissionModel).where(PermissionModel.id == permission_id)
+        )
+        permission_model = result.scalars().first()
+
+        if not permission_model:
+            return None
+
+        return Permission(
+            id=permission_model.id,
+            name=permission_model.name,
+            description=permission_model.description,
+        )

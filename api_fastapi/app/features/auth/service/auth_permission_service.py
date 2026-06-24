@@ -35,3 +35,14 @@ class PermissionService:
             )
             for permission in permissions
         ]
+    
+    async def get_permission(self, permission_id: int):
+        permission = await self.permission_repository.get_by_id(permission_id)
+        if not permission:
+            return None
+        
+        return PermissionResponse(
+            id=permission.id,
+            name=permission.name,
+            description=permission.description,
+        )

@@ -41,6 +41,7 @@ class TestAuthPermissionService:
         assert created_permission_arg.name == "manage_users"
         assert created_permission_arg.description == "Can manage users"
     
+    
     @pytest.mark.anyio
     async def test_list_permission(self) -> None:
         repository_mock = AsyncMock()
@@ -62,7 +63,7 @@ class TestAuthPermissionService:
 
         service = PermissionService(repository_mock)
 
-        result = await service.list_permission()
+        result = await service.list_permissions()
 
         expected_result = [
             PermissionResponse(
@@ -79,3 +80,29 @@ class TestAuthPermissionService:
 
         assert result == expected_result
         repository_mock.list_permissions.assert_awaited_once()
+
+    @pytest.mark.anyio
+    async def test_get_permission_by_id(self) -> None:
+        repository_mock = AsyncMock()
+
+        permission = Permission(
+            id=1,
+            name="manage_users",
+            description="Can manage users",
+        )
+
+        repository_mock.get_by_id.return_value = permission
+
+        service = PermissionService(repository_mock)
+
+        result = await service.get_permission(permission_id=1)
+
+        expected_result = PermissionResponse(
+            id=1,
+            name="manage_users",
+            description="Can manage users",
+        )
+
+        assert result == expected_result
+        repository_mock.get_by_id.assert_awaited_once_with(1)
+    

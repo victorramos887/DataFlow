@@ -3,3 +3,6 @@ class EmailAlreadyExistsError(Exception):
 
 class PermissionAlreadyExistsError(Exception):
     pass
+
+class RoleAlreadyExistisError(Exception):
+    pass
