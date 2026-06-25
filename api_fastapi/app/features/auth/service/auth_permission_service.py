@@ -27,11 +27,13 @@ class PermissionService:
     
     async def list_permissions(self):
         permissions = await self.permission_repository.list_permissions()
+
         return [
             PermissionResponse(
                 id=permission.id,
                 name=permission.name,
                 description=permission.description,
+                roles= permission.roles
             )
             for permission in permissions
         ]

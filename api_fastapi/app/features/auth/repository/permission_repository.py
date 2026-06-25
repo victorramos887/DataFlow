@@ -1,8 +1,10 @@
 from sqlalchemy import select
+from sqlalchemy.orm import selectinload
 from sqlalchemy.ext.asyncio import AsyncSession
 
 
 from app.features.auth.entities.permission_entity import Permission
+from app.features.auth.entities.roles_entity import Role
 from app.features.auth.models.permission_model import PermissionModel
 
 class PermissionRepository:
@@ -42,7 +44,10 @@ class PermissionRepository:
         )
         
     async def list_permissions(self) -> list[Permission]:
-        result = await self.session.execute(select(PermissionModel))
+        result = await self.session.execute(
+            select(PermissionModel)
+            .options(selectinload(PermissionModel.roles))
+        )
         permission_models = result.scalars().all()
 
         return [
@@ -50,6 +55,13 @@ class PermissionRepository:
                 id=permission_model.id,
                 name=permission_model.name,
                 description=permission_model.description,
+                roles=[
+                    Role(
+                        id=role.id,
+                        name=role.name,
+                        description = role.description
+                    ) for role in permission_model.roles
+                ]
             )
             for permission_model in permission_models
         ]
