@@ -58,6 +58,24 @@ class AuthService:
             roles=[role.id for role in updated_user.roles if role.id is not None],
         )
     
+    async def role_delete(self, user_id: int, role_id: int) -> UserRequestRole | None:
+        
+               
+        delete_role = await self.user_repository.delete_roles(user_id=user_id, role_id=role_id)
+        
+        if delete_role is None:
+            return None
+        return UserResponse(
+            id=delete_role.id,
+            name=delete_role.name,
+            email=delete_role.email,
+            is_active=delete_role.is_active,
+            roles=delete_role.roles
+        )
+        
     async def login(self, payload: LoginRequest) -> TokenResponse:
         # Implement login logic here
         return TokenResponse(access_token="fake-token", token_type="bearer")
+    
+    
+    

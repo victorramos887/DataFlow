@@ -97,3 +97,47 @@ class UserRepository:
             is_active=user_model.is_active,
             roles=[Role(id=r.id, name=r.name, description=r.description) for r in user_model.roles],
         )
+        
+    async def delete_roles(self, user_id: int, role_id: int) -> User | None:
+        
+        stmt = (
+            select(UserModel)
+            .options(selectinload(UserModel.roles))
+            .where(UserModel.id == user_id)
+        )
+            
+        result = await self.session.execute(stmt)
+        user_model = result.scalar_one_or_none()
+        if user_model is None:
+            return None
+        
+        role_to_remove = next(
+            (role for role in user_model.roles if role.id == role_id),
+            None,
+        )
+
+        if role_to_remove is None:
+            return None
+
+        user_model.roles.remove(role_to_remove)
+
+        await self.session.commit()
+        await self.session.refresh(user_model)
+
+        return User(
+            id=user_model.id,
+            name=user_model.name,
+            email=user_model.email,
+            password_hash=user_model.password_hash,
+            is_active=user_model.is_active,
+            roles=[
+                Role(
+                    id=role.id,
+                    name=role.name,
+                    description=role.description,
+                )
+                for role in user_model.roles
+            ],
+        )
+            
+        

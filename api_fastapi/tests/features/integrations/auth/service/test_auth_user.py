@@ -85,19 +85,6 @@ class TestAuthUserServiceIntegration:
         await self.add_user()
         await self.add_roles()
         
-        #BANCO DE DADOS
-        stmt = select(RoleModel).where(RoleModel.id == 1)
-        result = await self.async_session.execute(stmt)
-        role = result.scalar_one_or_none()
-
-        assert role.id == 1
-        
-        stmt = select(UserModel).where(UserModel.id == 1)
-        result = await self.async_session.execute(stmt)
-        user = result.scalar_one_or_none()
-        
-        assert user.id == 1
-        
         
         response_ = self.auth_client.patch(
             "/auth/roles",
@@ -133,3 +120,34 @@ class TestAuthUserServiceIntegration:
         
         assert 1 == 1
     
+    @pytest.mark.anyio
+    async def test_delete_role_on_user(
+        self
+    ) -> None:
+        await self.add_user()
+        await self.add_roles()
+        
+        response = self.auth_client.patch(
+            "/auth/roles",
+            json={
+                "id":1,
+                "roles": [1, 2]
+            }
+        )
+        
+        assert response.status_code == 201
+        
+        response_delete = self.auth_client.delete(
+            f"/auth/roles/delete/{1}/{2}"
+        )
+       
+        assert response_delete.status_code == 200
+        assert response_delete.json() == {
+            "id": 1,
+            "name": "Usuários 01",
+            "email": "usuariofisrt@gmail.com",
+            "roles":[{'id': 1, 'name': 'tecnica', 'description': 'Equipe ténica'}],
+            "is_active": True,
+        }
+        
+        

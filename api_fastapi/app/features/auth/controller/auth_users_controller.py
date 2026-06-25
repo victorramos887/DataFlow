@@ -45,3 +45,15 @@ async def roles_implement(
     service: AuthServiceDep
 ) -> UserResponse:
     return await service.roles_implements(payload)
+
+@router.delete(
+    "/roles/delete/{user_id}/{role_id}",
+    response_model=UserResponse,
+    status_code = status.HTTP_200_OK
+)
+async def roles_delete(
+    user_id: int,
+    role_id: int,
+    service: AuthServiceDep,
+) -> UserResponse:
+    return await service.role_delete(user_id=user_id, role_id=role_id)
