@@ -39,6 +39,22 @@ class RolesRepository:
             name=role_model.name,
             description=role_model.description
         )
+        
+    async def get_by_id(self, role_id: int) -> Role | None:
+        result = await self.session.execute(
+            select(RoleModel).where(RoleModel.id == role_id)
+        )
+        
+        role_model = result.scalar_one_or_none()
+        
+        if not role_model:
+            return None
+        
+        return Role(
+            id=role_model.id,
+            name = role_model.name,
+            description=role_model.description
+        )
     
     async def list_roles(self) -> list[Role]:
         result = await self.session.execute(

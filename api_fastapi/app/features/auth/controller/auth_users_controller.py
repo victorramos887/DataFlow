@@ -3,6 +3,7 @@ from app.features.auth.dependencies.auth_dependencies import get_auth_service
 from app.features.auth.schemas.auth_schema import (
     LoginRequest, 
     RegisterRequest,
+    UserRequestRole,
     TokenResponse,
     UserResponse,
 )
@@ -34,3 +35,13 @@ async def login(
     return await service.login(payload)
 
 
+@router.patch(
+    "/roles",
+    response_model=UserResponse,
+    status_code = status.HTTP_201_CREATED
+)
+async def roles_implement(
+    payload: UserRequestRole,
+    service: AuthServiceDep
+) -> UserResponse:
+    return await service.roles_implements(payload)
