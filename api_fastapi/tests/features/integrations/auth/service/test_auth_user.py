@@ -6,11 +6,7 @@ from app.features.auth.service.auth_service import AuthService
 from app.features.auth.repository.user_repository import UserRepository
 from app.features.auth.repository.roles_repository import RolesRepository
 from app.features.auth.security.password_hasher import PasswordHasher
-from app.features.auth.models.role_model import RoleModel
-from app.features.auth.models.user_model import UserModel
 from app.features.auth.schemas.auth_schema import UserRequestRole
-
-from sqlalchemy import select
 
 class TestAuthUserServiceIntegration:
     

@@ -74,7 +74,7 @@ class TestAuthUserService:
             )
         )
         
-        result = await self.service.roles_implement(
+        result = await self.service.roles_implements(
             UserRequestRole(
                 id=1,
                 roles=[1, 2]
