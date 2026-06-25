@@ -10,7 +10,7 @@ from app.features.auth.schemas.auth_schema import (
 
 from app.features.auth.dependencies.auth_dependencies import AuthServiceDep
 
-router = APIRouter()
+router = APIRouter(prefix="/user")
 
 @router.post(
     "/register", 

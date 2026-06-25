@@ -1,4 +1,4 @@
-
+from typing import List
 from app.features.auth.schemas.auth_roles_schema import RolesRequest
 from app.features.auth.exceptions.services_erros import RoleAlreadyExistisError
 from app.features.auth.entities.roles_entity import Role
@@ -28,7 +28,7 @@ class RolesService:
         )
         
         
-    async def list_roles(self):
+    async def list_roles(self) -> list[RolesResponse]:
         list_roles = await self.roles_repository.list_roles()
         if not list_roles:
             return None

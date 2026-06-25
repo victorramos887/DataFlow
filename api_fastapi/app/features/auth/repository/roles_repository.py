@@ -75,7 +75,7 @@ class RolesRepository:
                     Permission(
                         id=permission.id,
                         name=permission.name,
-                        description=permission.descrition
+                        description=permission.description
                     )
                     for permission in role_model.permission
                 ]

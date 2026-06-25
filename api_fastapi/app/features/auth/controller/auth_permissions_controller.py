@@ -2,10 +2,10 @@ from fastapi import APIRouter, Depends, status
 from app.features.auth.schemas.auth_permission_schema import PermissionRequest
 from app.features.auth.dependencies.permission_dependencies import PermissionServiceDep
 
-router = APIRouter()
+router = APIRouter(prefix="/permissions")
 
 @router.post(
-    "/permissions",
+    "/register",
     status_code=status.HTTP_200_OK,
 )
 async def post_permission(
@@ -15,7 +15,7 @@ async def post_permission(
     return await service.create_permission(payload)
 
 @router.get(
-    "/permissions",
+    "/",
     status_code=status.HTTP_200_OK,
     response_model=list[PermissionRequest]
 )
@@ -25,7 +25,7 @@ async def list_permissions(
     return await service.list_permissions()
 
 @router.get(
-    "/permissions/{permission_id}",
+    "/{permission_id}",
     status_code=status.HTTP_200_OK,
 )
 async def get_permission(

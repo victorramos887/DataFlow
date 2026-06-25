@@ -8,7 +8,7 @@ class TestAuthUserController:
     @pytest.mark.anyio
     def test_register_user(self, auth_client: TestClient) -> None:
         response = auth_client.post(
-            "/auth/register",
+            "/auth/user/register",
             json={
                 "name": "Victor Ramos",
                 "email": "victor@email.com",
@@ -27,7 +27,7 @@ class TestAuthUserController:
     @pytest.mark.anyio
     def test_login_user(self, auth_client: TestClient) -> None:
         response = auth_client.post(
-            "/auth/login",
+            "/auth/user/login",
             json={
                 "email": "victor@email.com",
                 "password": "12345678",
@@ -43,7 +43,7 @@ class TestAuthUserController:
     @pytest.mark.anyio
     def test_login_with_invalid_credentials(self, auth_client: TestClient) -> None:
         response = auth_client.post(
-            "/auth/login",
+            "/auth/user/login",
             json={
                 "email": "victor@email.com",
                 "password": "senha-errada",
