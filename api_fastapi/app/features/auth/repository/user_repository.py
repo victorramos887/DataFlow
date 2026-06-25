@@ -50,21 +50,25 @@ class UserRepository:
         )
         
     async def get_by_id(self, id: int) -> User | None:
-        stmt = select(UserModel).where(UserModel.id == id)
+        stmt = (
+            select(UserModel)
+            .options(selectinload(UserModel.roles))
+            .where(UserModel.id == id)
+        )
         
         result = await self.session.execute(stmt)
         user_model = result.scalar_one_or_none()
         
         if user_model is None:
             return None
-
+        
         return  User(
             id=user_model.id,
             name=user_model.name,
             email=user_model.email,
             password_hash=user_model.password_hash,
             is_active=user_model.is_active,
-            roles=user_model.roles
+            roles=[role.id for role in user_model.roles],
         )
 
     async def assign_roles(self, user_id: int, role_ids: list[int]) -> User | None:

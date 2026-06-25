@@ -73,6 +73,22 @@ class AuthService:
             roles=delete_role.roles
         )
         
+    async def get_by_id(self, user_id: int) -> UserResponse:
+        user_get_by_id = await self.user_repository.get_by_id(
+            id=user_id
+        )
+        
+        if not user_get_by_id:
+            return None
+        
+        return UserResponse(
+            id=user_get_by_id.id,
+            name=user_get_by_id.name,
+            email=user_get_by_id.email,
+            is_active=user_get_by_id.is_active,
+            roles=user_get_by_id.roles
+        )
+        
     async def login(self, payload: LoginRequest) -> TokenResponse:
         # Implement login logic here
         return TokenResponse(access_token="fake-token", token_type="bearer")
