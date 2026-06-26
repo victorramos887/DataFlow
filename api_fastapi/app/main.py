@@ -10,7 +10,7 @@ from opentelemetry.sdk.trace.export import BatchSpanProcessor
 
 from .core.config import Settings
 
-from app.features.auth.controller import router as auth_router
+from app.features.auth.api.controller import router as auth_router
 
 settings = Settings()
 OTEL_EXPORTER_OTLP_ENDPOINT = settings.otel_exporter_otlp_endpoint
