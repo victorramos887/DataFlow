@@ -7,6 +7,8 @@ from app.features.auth.infra.repository.user_repository import UserRepository
 
 from app.features.auth.application.service.auth_service import AuthService
 from app.features.auth.api.dependencies.roles_dependencies import RolesRepositoryDep
+from fastapi.security import OAuth2PasswordRequestForm
+
 
 async def get_user_repository(
     session: SessionDep) -> UserRepository:
@@ -28,3 +30,6 @@ def get_auth_service(
     return AuthService(user_repository=user_repository, role_repository=role_repository, password_hasher=password_hasher)
 
 AuthServiceDep = Annotated[AuthService, Depends(get_auth_service)]
+
+
+AuthOAuthDep = Annotated[OAuth2PasswordRequestForm, Depends()]

@@ -17,6 +17,9 @@ class Settings(BaseSettings):
 
     otel_exporter_otlp_endpoint: str = "http://dataflow-otel-lgtm:4317"
     otel_service_name: str = "dataflow-api"
+    
+    access_token_expire_minutes: int = 30
+    secret_key: str 
 
     @model_validator(mode="after")
     def build_database_url(self):
