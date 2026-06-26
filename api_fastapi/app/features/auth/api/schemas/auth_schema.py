@@ -19,6 +19,12 @@ class UserResponse(BaseModel):
     roles: List | None = []
     model_config = ConfigDict(from_attributes=True)
     
+class UserSummaryResponse(BaseModel):
+    id: int
+    name: str
+    email: EmailStr
+    is_active: bool
+    
 class TokenResponse(BaseModel):
     access_token: str
     token_type: str = "bearer"

@@ -49,6 +49,7 @@ class PermissionRepository:
         result = await self.session.execute(
             select(PermissionModel)
             .options(selectinload(PermissionModel.roles))
+            .options(selectinload(PermissionModel.roles, RoleModel.users))
         )
         permission_models = result.scalars().all()
 

@@ -2,7 +2,7 @@ from typing import List
 from app.features.auth.api.schemas.auth_roles_schema import RolesRequest
 from app.features.auth.domain.exceptions.services_erros import RoleAlreadyExistisError
 from app.features.auth.domain.entities.roles_entity import Role
-from app.features.auth.api.schemas.auth_roles_schema import RolesResponse, RolesPermission
+from app.features.auth.api.schemas.auth_roles_schema import RolesResponse, RolesPermission, UserSummaryResponse, PermissionSummaryResponse
 class RolesService:
     def __init__(self, roles_repository) -> None:
         self.roles_repository = roles_repository
@@ -33,13 +33,30 @@ class RolesService:
         if not list_roles:
             return None
         return [
-            RolesResponse(
-                id=role.id,
-                name=role.name,
-                description=role.description,
-                permission=role.permission
-            ) for role in list_roles
-        ]
+        RolesResponse(
+            id=role.id,
+            name=role.name,
+            description=role.description,
+            permissions=[
+                PermissionSummaryResponse(
+                    id=permission.id,
+                    name=permission.name,
+                    description=permission.description,
+                )
+                for permission in role.permission
+            ],
+            users=[
+                UserSummaryResponse(
+                    id=user.id,
+                    name=user.name,
+                    email=user.email,
+                    is_active=user.is_active,
+                )
+                for user in role.users
+            ],
+        )
+        for role in list_roles
+    ]
     
     
     async def permission_implements(self, payload: RolesPermission) -> RolesResponse:
@@ -52,6 +69,22 @@ class RolesService:
                 id=updated_roles.id,
                 name=updated_roles.name,
                 description=updated_roles.description,
-                permission=updated_roles.permission
+                permissions=[
+                    PermissionSummaryResponse(
+                        id=permission.id,
+                        name=permission.name,
+                        description=permission.description,
+                    )
+                    for permission in updated_roles.permission
+                ],
+                users=[
+                    UserSummaryResponse(
+                        id=user.id,
+                        name=user.name,
+                        email=user.email,
+                        is_active=user.is_active,
+                    )
+                    for user in updated_roles.users
+                ],
             )
         

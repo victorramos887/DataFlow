@@ -4,6 +4,7 @@ from sqlalchemy.orm import selectinload
 
 from app.features.auth.domain.entities.roles_entity import Role
 from app.features.auth.domain.entities.permission_entity import Permission
+from app.features.auth.domain.entities.user_entity import User
 
 from app.features.auth.infra.models.role_model import RoleModel
 from app.features.auth.infra.models.permission_model import PermissionModel
@@ -64,6 +65,7 @@ class RolesRepository:
         result = await self.session.execute(
             select(RoleModel)
             .options(selectinload(RoleModel.permission))
+            .options(selectinload(RoleModel.users))
         )
         role_models = result.scalars().all()
         return [
@@ -78,10 +80,30 @@ class RolesRepository:
                         description=permission.description
                     )
                     for permission in role_model.permission
+                ],
+                users=[
+                    User(
+                        id=user.id,
+                        name=user.name,
+                        email=user.email,
+                        is_active=user.is_active
+                    )
+                    for user in role_model.users
                 ]
             )
             for role_model in role_models
         ]
+        
+    async def assign_permission(self, roles_id: int, permission_ids: list[int]) -> Role | None:
+        
+        stmt = (
+            select(RoleModel)
+            .options(selectinload(RoleModel.permission))
+            .options(selectinload(RoleModel.users))
+            .where(RoleModel.id == roles_id)
+        )
+        
+        result = await self.session.execute(stmt)
         
     async def assign_permission(self, roles_id: int, permission_ids: list[int]) -> Role | None:
         

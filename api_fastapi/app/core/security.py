@@ -10,7 +10,7 @@ from fastapi.security import OAuth2PasswordBearer
 ALGORITHM = "HS256"
 
 oauth2_schema = OAuth2PasswordBearer(
-    tokenUrl="/auth/login",
+    tokenUrl="/auth/user/login",
 )
 
 def create_access_token(

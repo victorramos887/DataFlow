@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, Security, status
 
 from app.core.security import decode_access_token, oauth2_schema
 from app.features.auth.api.dependencies.auth_dependencies import AuthRepositoryDep
@@ -8,7 +8,7 @@ from app.features.auth.api.dependencies.permission_dependencies import Permissio
 from app.features.auth.domain.entities.user_entity import User
 
 
-TokenDep = Annotated[str, Depends(oauth2_schema)]
+TokenDep = Annotated[str, Security(oauth2_schema)]
 
 
 async def get_current_user(
@@ -47,6 +47,8 @@ def require_permission(permission_name: str):
             user_id=current_user.id,
             permission_name=permission_name,
         )
+        
+        print(f"has_permission: {has_permission}")
 
         if not has_permission:
             raise HTTPException(

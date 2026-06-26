@@ -6,13 +6,11 @@ from app.features.auth.api.dependencies.authorization_dependencies import get_cu
 
 protected_router = APIRouter(
     prefix="/roles",
-    tags=["Roles"],
     dependencies=[Depends(get_current_user)],
 )
 
 public_router = APIRouter(
     prefix="/auth",
-    tags=["Auth"],
 )
 
 
@@ -29,6 +27,7 @@ async def post_roles(
 
 @protected_router.get(
     "/",
+    dependencies=[Depends(require_permission("roles.read"))],
     status_code = status.HTTP_200_OK
 )
 async def list_roles(

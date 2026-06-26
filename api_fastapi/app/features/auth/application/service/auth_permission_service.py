@@ -2,6 +2,7 @@ from app.features.auth.api.schemas.auth_permission_schema import PermissionReque
 from app.features.auth.domain.exceptions.services_erros import PermissionAlreadyExistsError
 from app.features.auth.domain.entities.permission_entity import Permission
 from app.features.auth.api.schemas.auth_permission_schema import PermissionResponse
+from app.features.auth.api.schemas.auth_roles_schema import RoleResponsePermissionSummary
 class PermissionService:
     def __init__(self, permission_repository) -> None:
         self.permission_repository = permission_repository
@@ -33,7 +34,13 @@ class PermissionService:
                 id=permission.id,
                 name=permission.name,
                 description=permission.description,
-                roles= permission.roles
+                roles= [
+                    RoleResponsePermissionSummary(
+                        id=role.id,
+                        name=role.name,
+                        description=role.description
+                    ) for role in permission.roles
+                ]
             )
             for permission in permissions
         ]
