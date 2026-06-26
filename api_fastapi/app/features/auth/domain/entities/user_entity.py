@@ -7,6 +7,6 @@ class User:
     id: int | None
     name: str
     email: str
-    password_hash: str
+    password_hash: str | None = None
     roles: List[Role] = field(default_factory=list)
     is_active: bool = True

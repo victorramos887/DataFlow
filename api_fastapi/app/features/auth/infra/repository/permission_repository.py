@@ -7,6 +7,8 @@ from app.features.auth.domain.entities.permission_entity import Permission
 from app.features.auth.domain.entities.roles_entity import Role
 from app.features.auth.infra.models.permission_model import PermissionModel
 
+from app.features.auth.infra.models.user_model import UserModel
+from app.features.auth.infra.models.role_model import RoleModel
 class PermissionRepository:
     def __init__(self, session: AsyncSession):
         self.session = session
@@ -47,6 +49,7 @@ class PermissionRepository:
         result = await self.session.execute(
             select(PermissionModel)
             .options(selectinload(PermissionModel.roles))
+            .options(selectinload(PermissionModel.roles, RoleModel.users))
         )
         permission_models = result.scalars().all()
 
@@ -80,3 +83,23 @@ class PermissionRepository:
             name=permission_model.name,
             description=permission_model.description,
         )
+        
+    async def user_has_permission(
+        self,
+        user_id: int,
+        permission_name: str,
+    ) -> bool:
+        stmt = (
+            select(PermissionModel.id)
+            .join(PermissionModel.roles)
+            .join(RoleModel.users)
+            .where(
+                UserModel.id == user_id,
+                PermissionModel.name == permission_name,
+            )
+            .limit(1)
+        )
+
+        result = await self.session.execute(stmt)
+
+        return result.scalar_one_or_none() is not None

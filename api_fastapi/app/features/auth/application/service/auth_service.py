@@ -95,9 +95,26 @@ class AuthService:
             roles=user_get_by_id.roles
         )
         
-    async def login(self, payload: LoginRequest) -> TokenResponse:
-        # Implement login logic here
-        return TokenResponse(access_token="fake-token", token_type="bearer")
+    async def authenticate(
+        self,
+        email: str,
+        password: str,
+    ):
+        user = await self.user_repository.get_by_email(email)
+
+        if user is None:
+            return None
+
+        if not self.password_hasher.verify_password(
+            plain_password=password,
+            hashed_password=user.password_hash,
+        ):
+            return None
+
+        if not user.is_active:
+            return None
+
+        return user
     
     
     

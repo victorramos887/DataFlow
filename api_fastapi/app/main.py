@@ -8,7 +8,7 @@ from opentelemetry.sdk.resources import Resource
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 
-from .core.config import Settings
+from app.core.config import Settings
 
 from app.features.auth.api.controller import router as auth_router
 
