@@ -4,7 +4,7 @@ from collections.abc import Generator, AsyncGenerator
 
 import pytest
 from fastapi.testclient import TestClient
-from app.features.auth.schemas.auth_schema import (
+from app.features.auth.api.schemas.auth_schema import (
     LoginRequest,
     RegisterRequest,
     TokenResponse,
@@ -13,7 +13,7 @@ from app.features.auth.schemas.auth_schema import (
 
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 from app.core.dependencies import get_async_session
-from app.features.auth.dependencies.auth_dependencies import get_auth_service
+from app.features.auth.api.dependencies.auth_dependencies import get_auth_service
 from app.main import app
 
 from app.core.base import Base
