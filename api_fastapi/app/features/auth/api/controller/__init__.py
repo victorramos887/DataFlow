@@ -11,4 +11,4 @@ router = APIRouter(
 
 router.include_router(auth_users_controller.router)
 router.include_router(auth_permissions_controller.router)
-router.include_router(auth_roles_controller.router)
+router.include_router(auth_roles_controller.protected_router)

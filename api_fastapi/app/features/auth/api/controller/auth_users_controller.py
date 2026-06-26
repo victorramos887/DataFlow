@@ -10,8 +10,17 @@ from app.features.auth.api.schemas.auth_schema import (
 
 from app.core.security import create_access_token
 from app.features.auth.api.dependencies.auth_dependencies import AuthServiceDep, AuthOAuthDep
+from app.features.auth.api.dependencies.authorization_dependencies import CurrentUserDep
 
 router = APIRouter(prefix="/user")
+
+
+
+@router.get("/me")
+async def me(
+    current_user: CurrentUserDep,
+):
+    return current_user
 
 @router.post(
     "/register", 

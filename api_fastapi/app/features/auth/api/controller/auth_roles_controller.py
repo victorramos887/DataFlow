@@ -1,11 +1,24 @@
-from fastapi import APIRouter, status
+from fastapi import APIRouter, status, Depends
 from app.features.auth.api.schemas.auth_roles_schema import RolesRequest, RolesPermission
 from app.features.auth.api.dependencies.roles_dependencies import RolesServiceDep
 
-router = APIRouter(prefix="/roles")
+from app.features.auth.api.dependencies.authorization_dependencies import get_current_user, require_permission
 
-@router.post(
+protected_router = APIRouter(
+    prefix="/roles",
+    tags=["Roles"],
+    dependencies=[Depends(get_current_user)],
+)
+
+public_router = APIRouter(
+    prefix="/auth",
+    tags=["Auth"],
+)
+
+
+@protected_router.post(
     "/register",
+    dependencies=[Depends(require_permission("roles.create"))],
     status_code=status.HTTP_201_CREATED,
 )
 async def post_roles(
@@ -14,7 +27,7 @@ async def post_roles(
 ):
     return await service.create_roles(payload)
 
-@router.get(
+@protected_router.get(
     "/",
     status_code = status.HTTP_200_OK
 )
@@ -23,7 +36,7 @@ async def list_roles(
 ):
     return await service.list_roles()
 
-@router.patch(
+@protected_router.patch(
     "/permission",
     status_code = status.HTTP_200_OK
 )

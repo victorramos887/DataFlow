@@ -105,7 +105,7 @@ class AuthService:
         if user is None:
             return None
 
-        if not self.password_hasher.verify(
+        if not self.password_hasher.verify_password(
             plain_password=password,
             hashed_password=user.password_hash,
         ):
