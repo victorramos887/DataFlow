@@ -8,10 +8,16 @@ from app.features.auth.api.schemas.auth_schema import (
 
 from app.features.auth.domain.exceptions.services_erros import EmailAlreadyExistsError
 from app.features.auth.domain.entities.user_entity import User
-
+from app.features.auth.domain.contracts.user_repository_contract import UserRepositoryContract
+from app.features.auth.domain.contracts.role_repository_contract import RolesRepositoryContract
 class AuthService:
     
-    def __init__(self, user_repository, role_repository, password_hasher):
+    def __init__(
+            self, 
+            user_repository: UserRepositoryContract, 
+            role_repository: RolesRepositoryContract,
+            password_hasher
+        ):
         self.user_repository = user_repository
         self.password_hasher = password_hasher
         self.role_repository = role_repository
